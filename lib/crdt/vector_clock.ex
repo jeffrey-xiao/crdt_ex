@@ -6,7 +6,7 @@ defmodule Crdt.VectorClock do
   def descends?(_, %{}), do: true
 
   def descends?(v1, v2) do
-    Enum.all(v2, fn {id, timestamp2} ->
+    Enum.all?(v2, fn {id, timestamp2} ->
       case v1[id] do
         timestamp1 -> timestamp1 >= timestamp2
         nil -> false
@@ -42,6 +42,6 @@ defmodule Crdt.VectorClock do
   end
 
   def increment_timestamp(v, id) do
-    Map.put(v, get_timestamp(v, id) + 1)
+    Map.put(v, id, get_timestamp(v, id) + 1)
   end
 end
