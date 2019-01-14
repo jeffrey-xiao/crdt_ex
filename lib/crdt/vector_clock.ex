@@ -44,5 +44,4 @@ defmodule Crdt.VectorClock do
   def increment_timestamp(v, id) do
     Map.put(v, get_timestamp(v, id) + 1)
   end
-
 end
