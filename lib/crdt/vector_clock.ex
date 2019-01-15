@@ -3,7 +3,7 @@ defmodule Crdt.VectorClock do
     %{}
   end
 
-  def descends?(_, %{}), do: true
+  def descends?(_v1, v2) when v2 == %{}, do: true
 
   def descends?(v1, v2) do
     Enum.all?(v2, fn {id, timestamp2} ->
@@ -25,14 +25,14 @@ defmodule Crdt.VectorClock do
   def merge(v1, v2) do
     (Map.keys(v1) ++ Map.keys(v2))
     |> Stream.uniq()
-    |> Stream.map(fn id -> max(get(v1, id), get(v2, id)) end)
+    |> Stream.map(fn id -> {id, max(get(v1, id), get(v2, id))} end)
     |> Enum.into(%{})
   end
 
   def greatest_lower_bound(v1, v2) do
     v1
     |> Enum.filter(fn {id, _timestamp} -> v2[id] != nil end)
-    |> Enum.map(fn {id, timestamp} -> min(timestamp, v2[id]) end)
+    |> Enum.map(fn {id, timestamp} -> {id, min(timestamp, v2[id])} end)
     |> Enum.into(%{})
   end
 
