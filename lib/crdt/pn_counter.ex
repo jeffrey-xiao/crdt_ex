@@ -3,7 +3,7 @@ defmodule Crdt.PNCounter do
 
   alias Crdt.VectorClock
 
-  def new(), do: %__MODULE__{p_clock: VectorClock.new()}
+  def new(), do: %__MODULE__{p_clock: VectorClock.new(), n_clock: VectorClock.new()}
 
   def merge(c1, c2),
     do: %__MODULE__{
@@ -12,10 +12,10 @@ defmodule Crdt.PNCounter do
     }
 
   def increment(counter, id, value \\ 1),
-    do: %{counter | p_clock: VectorClock.increment(counter.clock, id, value)}
+    do: %{counter | p_clock: VectorClock.increment(counter.p_clock, id, value)}
 
   def decrement(counter, id, value \\ 1),
-    do: %{counter | n_clock: VectorClock.increment(counter.clock, id, value)}
+    do: %{counter | n_clock: VectorClock.increment(counter.n_clock, id, value)}
 
   def get(counter) do
     p_count =

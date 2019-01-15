@@ -54,7 +54,6 @@ defmodule Crdt.VectorClockTest do
     assert %{1 => 1, 2 => 2, 3 => 3} == merge(%{2 => 2, 3 => 3}, %{1 => 1})
   end
 
-
   test "greatest_lower_bound?", %{c1: c1, c2: c2, c3: c3} do
     assert greatest_lower_bound(c1, c3) == c1
     assert greatest_lower_bound(c2, c3) == c2

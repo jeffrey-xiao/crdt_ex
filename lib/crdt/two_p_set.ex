@@ -11,17 +11,17 @@ defmodule Crdt.TwoPSet do
       r_set: GSet.merge(s1.r_set, s2.r_set)
     }
 
-  def add(set, item), do: %{set | a_set: MapSet.put(set.a_set, item)}
+  def add(set, item), do: %__MODULE__{set | a_set: GSet.add(set.a_set, item)}
 
   def remove(set, item) do
-    if MapSet.member?(set.a_set, item) do
-      %{set | r_set: MapSet.put(set.r_set, item)}
+    if GSet.member?(set.a_set, item) do
+      %__MODULE__{set | r_set: GSet.add(set.r_set, item)}
     else
       set
     end
   end
 
   def member?(set, item) do
-    MapSet.member?(set.a_set, item) && !MapSet.member?(set.r_set, item)
+    GSet.member?(set.a_set, item) && !GSet.member?(set.r_set, item)
   end
 end
