@@ -22,6 +22,6 @@ defmodule Crdt.TwoPSet do
   end
 
   def member?(set, item) do
-    Map.member?(set.a_set, item) && !Map.member?(set.r_set, item)
+    MapSet.member?(set.a_set, item) && !MapSet.member?(set.r_set, item)
   end
 end

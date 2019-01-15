@@ -16,6 +16,8 @@ defmodule Crdt.VectorClock do
 
   def dominates?(v1, v2), do: descends?(v1, v2) && !descends?(v2, v1)
 
+  def concurrent?(v1, v2), do: !descends?(v1, v2) && !descends?(v2, v1)
+
   def forget(v1, v2) do
     Enum.filter(v1, fn {id, timestamp} -> timestamp < get(v2, id) end)
   end
