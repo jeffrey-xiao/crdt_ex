@@ -1,5 +1,9 @@
 # crdt_ex
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Build Status](https://travis-ci.org/jeffrey-xiao/crdt_ex.svg?branch=master)](https://travis-ci.org/jeffrey-xiao/crdt_ex)
+
 A library of Conflict-Free Replicated Data Types (CRDTs) written in pure Elixir.
 
 CRDTs are data structures which can be replicated across multiple computers in a network, where the
