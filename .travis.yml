@@ -10,7 +10,7 @@ install:
 script:
   - mix format --check-formatted
   - mix test
-  - mix coveralls.travis
+  - mix coveralls.json && bash <(curl -s https://codecov.io/bash)
 
 after_success:
   - mix docs

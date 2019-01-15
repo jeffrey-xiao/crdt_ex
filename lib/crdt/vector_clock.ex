@@ -19,7 +19,9 @@ defmodule Crdt.VectorClock do
   def concurrent?(v1, v2), do: !descends?(v1, v2) && !descends?(v2, v1)
 
   def forget(v1, v2) do
-    Enum.filter(v1, fn {id, timestamp} -> timestamp < get(v2, id) end)
+    v1
+    |> Enum.filter(fn {id, timestamp} -> timestamp >= get(v2, id) end)
+    |> Enum.into(%{})
   end
 
   def merge(v1, v2) do

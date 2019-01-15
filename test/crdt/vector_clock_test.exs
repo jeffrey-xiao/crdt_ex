@@ -11,10 +11,8 @@ defmodule Crdt.VectorClockTest do
     }
   end
 
-  test "merge", %{c1: c1, c2: c2, c3: c3} do
-    assert c3 == merge(c1, c2)
-    assert %{1 => 1, 2 => 2, 3 => 3} == merge(%{1 => 1}, %{2 => 2, 3 => 3})
-    assert %{1 => 1, 2 => 2, 3 => 3} == merge(%{2 => 2, 3 => 3}, %{1 => 1})
+  test "new" do
+    assert new() == %{}
   end
 
   test "descends?", %{c1: c1, c2: c2, c3: c3} do
@@ -43,6 +41,19 @@ defmodule Crdt.VectorClockTest do
     assert !concurrent?(c3, c2)
     assert concurrent?(c3, %{1 => 2})
   end
+
+  test "forget", %{c1: c1, c2: c2, c3: c3} do
+    assert forget(c1, c3) == %{1 => 1}
+    assert forget(c2, c3) == %{2 => 3, 3 => 3}
+    assert forget(%{1 => 2, 3 => 1}, c3) == %{1 => 2}
+  end
+
+  test "merge", %{c1: c1, c2: c2, c3: c3} do
+    assert c3 == merge(c1, c2)
+    assert %{1 => 1, 2 => 2, 3 => 3} == merge(%{1 => 1}, %{2 => 2, 3 => 3})
+    assert %{1 => 1, 2 => 2, 3 => 3} == merge(%{2 => 2, 3 => 3}, %{1 => 1})
+  end
+
 
   test "greatest_lower_bound?", %{c1: c1, c2: c2, c3: c3} do
     assert greatest_lower_bound(c1, c3) == c1
