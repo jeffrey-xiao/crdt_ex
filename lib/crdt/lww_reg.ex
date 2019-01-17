@@ -1,4 +1,4 @@
-defmodule LWWReg do
+defmodule Crdt.LWWReg do
   defstruct value: nil, timestamp: nil
 
   def new(value, timestamp), do: %__MODULE__{value: value, timestamp: timestamp}

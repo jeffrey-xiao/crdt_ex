@@ -3,16 +3,22 @@ defmodule Crdt.LWWSet do
 
   def new(bias), do: %__MODULE__{a_map: %{}, r_map: %{}, bias: bias}
 
-  def merge(s1, s2),
-    do: %__MODULE__{
+  def merge(s1, s2) do
+    if s1.bias != s2.bias do
+      raise "Maps must have equal biases."
+    end
+
+    %__MODULE__{
       a_map: map_merge(s1.a_map, s2.a_map),
-      r_map: map_merge(s1.r_map, s2.r_map)
+      r_map: map_merge(s1.r_map, s2.r_map),
+      bias: s1.bias
     }
+  end
 
   defp map_merge(m1, m2) do
     (Map.keys(m1) ++ Map.keys(m2))
     |> Stream.uniq()
-    |> Stream.map(fn item -> map_max(m1[item], m2[item]) end)
+    |> Stream.map(fn item -> {item, map_max(m1[item], m2[item])} end)
     |> Enum.into(%{})
   end
 
@@ -26,15 +32,15 @@ defmodule Crdt.LWWSet do
   end
 
   defp map_set(map, item, timestamp) do
-    Map.put(map, item, max(map[item], timestamp))
+    Map.put(map, item, map_max(map[item], timestamp))
   end
 
   def add(set, item, timestamp) do
-    %{set | a_clock: map_set(set.a_clock, item, timestamp)}
+    %{set | a_map: map_set(set.a_map, item, timestamp)}
   end
 
   def remove(set, item, timestamp) do
-    %{set | r_clock: map_set(set.r_clock, item, timestamp)}
+    %{set | r_map: map_set(set.r_map, item, timestamp)}
   end
 
   def member?(set, item) do

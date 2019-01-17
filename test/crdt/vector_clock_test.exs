@@ -21,24 +21,24 @@ defmodule Crdt.VectorClockTest do
     assert descends?(c3, c3)
     assert descends?(c3, c1)
     assert descends?(c3, c2)
-    assert !descends?(c3, %{1 => 2})
+    refute descends?(c3, %{1 => 2})
   end
 
   test "dominates?", %{c1: c1, c2: c2, c3: c3} do
-    assert !dominates?(%{}, %{})
+    refute dominates?(%{}, %{})
     assert dominates?(c3, %{})
-    assert !dominates?(c3, c3)
+    refute dominates?(c3, c3)
     assert dominates?(c3, c1)
     assert dominates?(c3, c2)
-    assert !dominates?(c3, %{1 => 2})
+    refute dominates?(c3, %{1 => 2})
   end
 
   test "concurrent?", %{c1: c1, c2: c2, c3: c3} do
-    assert !concurrent?(%{}, %{})
-    assert !concurrent?(c3, %{})
-    assert !concurrent?(c3, c3)
-    assert !concurrent?(c3, c1)
-    assert !concurrent?(c3, c2)
+    refute concurrent?(%{}, %{})
+    refute concurrent?(c3, %{})
+    refute concurrent?(c3, c3)
+    refute concurrent?(c3, c1)
+    refute concurrent?(c3, c2)
     assert concurrent?(c3, %{1 => 2})
   end
 

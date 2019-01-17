@@ -13,7 +13,7 @@ defmodule Crdt.TwoPSetTest do
     s2 = new() |> add(1) |> add(3)
     s3 = merge(s1, s2)
 
-    assert !member?(s3, 1)
+    refute member?(s3, 1)
     assert member?(s3, 2)
     assert member?(s3, 3)
   end
@@ -28,6 +28,6 @@ defmodule Crdt.TwoPSetTest do
     assert member?(set, 1)
 
     set = new() |> add(1) |> remove(1)
-    assert !member?(set, 1)
+    refute member?(set, 1)
   end
 end
