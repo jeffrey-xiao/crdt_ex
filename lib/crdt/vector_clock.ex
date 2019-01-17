@@ -1,8 +1,20 @@
 defmodule Crdt.VectorClock do
+  @moduledoc """
+  A Vector Clock is capable of generating a partial ordering of events in a distributed system and
+  detecting causality vioations. It is essentially a map of actors to their logical clock value.
+  """
+
+  @doc """
+  Returns a new, empty Vector Clock.
+  """
   def new() do
     %{}
   end
 
+  @doc """
+  Returns `true` if `v1` is a direct descendent of `v2`. Note that a vector clock is its own
+  descendent.
+  """
   def descends?(_v1, v2) when v2 == %{}, do: true
 
   def descends?(v1, v2) do
@@ -14,16 +26,28 @@ defmodule Crdt.VectorClock do
     end)
   end
 
+  @doc """
+  Returns `true` if `v1` descends `v2` and `v1` does not equal `v2`.
+  """
   def dominates?(v1, v2), do: descends?(v1, v2) && !descends?(v2, v1)
 
+  @doc """
+  Returns `true` if `v1` and `v2` have diverged.
+  """
   def concurrent?(v1, v2), do: !descends?(v1, v2) && !descends?(v2, v1)
 
+  @doc """
+  Forget any actors in `v1` that have smaller counts than the count in `v2`.
+  """
   def forget(v1, v2) do
     v1
     |> Enum.filter(fn {id, timestamp} -> timestamp >= get(v2, id) end)
     |> Enum.into(%{})
   end
 
+  @doc """
+  Merges `v1` and `v2`.
+  """
   def merge(v1, v2) do
     (Map.keys(v1) ++ Map.keys(v2))
     |> Stream.uniq()
@@ -31,6 +55,9 @@ defmodule Crdt.VectorClock do
     |> Enum.into(%{})
   end
 
+  @doc """
+  Returns the greatest-lower-bound of `v1` and `v2`.
+  """
   def greatest_lower_bound(v1, v2) do
     v1
     |> Enum.filter(fn {id, _timestamp} -> v2[id] != nil end)
@@ -38,6 +65,9 @@ defmodule Crdt.VectorClock do
     |> Enum.into(%{})
   end
 
+  @doc """
+  Returns the count of `id` in `v` if it exists. Else it will return 0.
+  """
   def get(v, id) do
     case v[id] do
       nil -> 0
@@ -45,6 +75,9 @@ defmodule Crdt.VectorClock do
     end
   end
 
+  @doc """
+  Increments the count of `id` in `v` by `value`.
+  """
   def increment(v, id, value \\ 1) do
     Map.put(v, id, get(v, id) + value)
   end
