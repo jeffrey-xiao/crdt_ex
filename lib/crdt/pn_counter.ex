@@ -6,7 +6,7 @@ defmodule Crdt.PNCounter do
 
   alias Crdt.VectorClock
 
-  @type t :: %__MODULE__{p_clock: VectorClock.t, n_clock: VectorClock.t}
+  @type t :: %__MODULE__{p_clock: VectorClock.t(), n_clock: VectorClock.t()}
 
   @doc """
   Returns a new, empty PN-Counter.

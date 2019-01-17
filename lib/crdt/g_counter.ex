@@ -4,7 +4,7 @@ defmodule Crdt.GCounter do
   """
   alias Crdt.VectorClock
 
-  @type t :: VectorClock.t
+  @type t :: VectorClock.t()
 
   @doc """
   Returns a new, empty G-Counter.

@@ -6,7 +6,7 @@ defmodule Crdt.TwoPSet do
 
   alias Crdt.GSet
 
-  @type t :: %__MODULE__{a_set: GSet.t, r_set: GSet.t}
+  @type t :: %__MODULE__{a_set: GSet.t(), r_set: GSet.t()}
 
   @doc """
   Returns a new, empty 2P-Set.

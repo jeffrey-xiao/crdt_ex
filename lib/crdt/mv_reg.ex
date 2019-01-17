@@ -5,7 +5,7 @@ defmodule Crdt.MVReg do
   """
   alias Crdt.VectorClock
 
-  @type t :: [{any(), VectorClock.t}]
+  @type t :: [{any(), VectorClock.t()}]
 
   @doc """
   Returns a new, empty MV-Reg.
@@ -50,7 +50,7 @@ defmodule Crdt.MVReg do
   @spec get(t) :: [any()]
   def get(reg), do: reg |> Enum.map(fn {value, _clock} -> value end) |> Enum.uniq()
 
-  @spec clock(t) :: VectorClock.t
+  @spec clock(t) :: VectorClock.t()
   defp clock(reg) do
     reg
     |> Enum.reduce(VectorClock.new(), fn {_value, clock}, acc -> VectorClock.merge(clock, acc) end)
