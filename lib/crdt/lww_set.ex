@@ -6,14 +6,20 @@ defmodule Crdt.LWWSet do
   """
   defstruct a_map: %{}, r_map: %{}, bias: :add
 
+  @type bias :: :add | :remove
+  @type value_map :: %{any() => any()}
+  @type t :: %__MODULE__{a_map: value_map, r_map: value_map, bias: bias}
+
   @doc """
   Returns a new, empty LWW-Set.
   """
+  @spec new(bias) :: t
   def new(bias), do: %__MODULE__{a_map: %{}, r_map: %{}, bias: bias}
 
   @doc """
   Merges `s1` and `s2`.
   """
+  @spec merge(t, t) :: t
   def merge(s1, s2) do
     if s1.bias != s2.bias do
       raise "Maps must have equal biases."
@@ -26,6 +32,7 @@ defmodule Crdt.LWWSet do
     }
   end
 
+  @spec map_merge(value_map, value_map) :: value_map
   defp map_merge(m1, m2) do
     (Map.keys(m1) ++ Map.keys(m2))
     |> Stream.uniq()
@@ -33,6 +40,7 @@ defmodule Crdt.LWWSet do
     |> Enum.into(%{})
   end
 
+  @spec map_max(any(), any()) :: any()
   defp map_max(item1, item2) do
     case {item1, item2} do
       {nil, item2} -> item2
@@ -42,6 +50,7 @@ defmodule Crdt.LWWSet do
     end
   end
 
+  @spec map_set(value_map(), any(), any()) :: value_map()
   defp map_set(map, item, timestamp) do
     Map.put(map, item, map_max(map[item], timestamp))
   end
@@ -49,6 +58,7 @@ defmodule Crdt.LWWSet do
   @doc """
   Adds `item` to `set` at `timestamp`.
   """
+  @spec add(t, any(), any()) :: t
   def add(set, item, timestamp) do
     %{set | a_map: map_set(set.a_map, item, timestamp)}
   end
@@ -56,6 +66,7 @@ defmodule Crdt.LWWSet do
   @doc """
   Adds `item` to `set` at `timestamp`.
   """
+  @spec remove(t, any(), any()) :: t
   def remove(set, item, timestamp) do
     %{set | r_map: map_set(set.r_map, item, timestamp)}
   end
@@ -63,6 +74,7 @@ defmodule Crdt.LWWSet do
   @doc """
   Returns `true` if `item` is a member of `set`.
   """
+  @spec member?(t, any()) :: boolean()
   def member?(set, item) do
     a_item = set.a_map[item]
     r_item = set.r_map[item]

@@ -5,14 +5,18 @@ defmodule Crdt.MVReg do
   """
   alias Crdt.VectorClock
 
+  @type t :: [{any(), VectorClock.t}]
+
   @doc """
   Returns a new, empty MV-Reg.
   """
+  @spec new() :: t
   def new(), do: []
 
   @doc """
   Merges `r1` and `r2`.
   """
+  @spec merge(t, t) :: t
   def merge(r1, r2) do
     r1_values =
       r1
@@ -35,6 +39,7 @@ defmodule Crdt.MVReg do
   Updates `reg` with `value` from actor `id`. It will store all conflicting entries that do have
   parent Vector Clocks.
   """
+  @spec update(t, any(), any()) :: t
   def update(reg, id, value) do
     [{value, reg |> clock() |> VectorClock.increment(id, 1)}]
   end
@@ -42,8 +47,10 @@ defmodule Crdt.MVReg do
   @doc """
   Returns a list of values associated with `reg`.
   """
+  @spec get(t) :: [any()]
   def get(reg), do: reg |> Enum.map(fn {value, _clock} -> value end) |> Enum.uniq()
 
+  @spec clock(t) :: VectorClock.t
   defp clock(reg) do
     reg
     |> Enum.reduce(VectorClock.new(), fn {_value, clock}, acc -> VectorClock.merge(clock, acc) end)
