@@ -1,11 +1,10 @@
 defmodule Crdt.MVRegTest do
   use ExUnit.Case
   import Crdt.MVReg
-  alias Crdt.MVReg
   doctest Crdt.MVReg
 
   test "new" do
-    assert new() == %MVReg{values: []}
+    assert new() == []
   end
 
   test "merge" do

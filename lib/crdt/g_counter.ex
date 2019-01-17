@@ -1,17 +1,14 @@
 defmodule Crdt.GCounter do
-  defstruct clock: %{}
-
   alias Crdt.VectorClock
 
-  def new(), do: %__MODULE__{clock: VectorClock.new()}
+  def new(), do: VectorClock.new()
 
-  def merge(c1, c2), do: %__MODULE__{clock: VectorClock.merge(c1.clock, c2.clock)}
+  def merge(c1, c2), do: VectorClock.merge(c1, c2)
 
-  def increment(counter, id, value \\ 1),
-    do: %{counter | clock: VectorClock.increment(counter.clock, id, value)}
+  def increment(counter, id, value \\ 1), do: VectorClock.increment(counter, id, value)
 
   def get(counter) do
-    counter.clock
+    counter
     |> Map.values()
     |> Enum.sum()
   end

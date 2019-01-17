@@ -1,11 +1,10 @@
 defmodule Crdt.GSetTest do
   use ExUnit.Case
   import Crdt.GSet
-  alias Crdt.GSet
   doctest Crdt.GSet
 
   test "new" do
-    assert new() == %GSet{items: MapSet.new()}
+    assert new() == MapSet.new()
   end
 
   test "merge" do

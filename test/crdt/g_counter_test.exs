@@ -1,11 +1,11 @@
 defmodule Crdt.GCounterTest do
   use ExUnit.Case
   import Crdt.GCounter
-  alias Crdt.{GCounter, VectorClock}
+  alias Crdt.VectorClock
   doctest Crdt.GCounter
 
   test "new" do
-    assert new() == %GCounter{clock: VectorClock.new()}
+    assert new() == VectorClock.new()
   end
 
   test "merge" do
