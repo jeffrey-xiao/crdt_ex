@@ -71,4 +71,10 @@ defmodule Crdt.VectorClockTest do
     assert increment(c3, 1, 1) == %{1 => 2, 2 => 3, 3 => 3}
     assert increment(c3, 1, 2) == %{1 => 3, 2 => 3, 3 => 3}
   end
+
+  test "apply", %{c3: c3} do
+    assert apply_dot(c3, {2, 2}) == %{1 => 1, 2 => 3, 3 => 3}
+    assert apply_dot(c3, {2, 3}) == %{1 => 1, 2 => 3, 3 => 3}
+    assert apply_dot(c3, {2, 4}) == %{1 => 1, 2 => 4, 3 => 3}
+  end
 end

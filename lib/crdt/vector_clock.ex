@@ -92,4 +92,16 @@ defmodule Crdt.VectorClock do
   def increment(v, id, value \\ 1) do
     Map.put(v, id, get(v, id) + value)
   end
+
+  @doc """
+  Apply a `{id, count}` to the clock.
+  """
+  @spec apply_dot(t, {any(), non_neg_integer()}) :: t
+  def apply_dot(v, {id, count}) do
+    if get(v, id) < count do
+      Map.put(v, id, count)
+    else
+      v
+    end
+  end
 end
