@@ -75,7 +75,9 @@ defmodule Crdt.LWWSet do
     set.a_map
     |> Stream.filter(fn {item, a_timestamp} ->
       case set.r_map[item] do
-        nil -> true
+        nil ->
+          true
+
         r_timestamp ->
           cond do
             a_timestamp > r_timestamp -> true

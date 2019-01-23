@@ -42,13 +42,16 @@ defmodule Crdt.ORSetTest do
   end
 
   test "remove occurred in future" do
-    s1 = new()
-         |> add(1, 1)
-         |> apply_remove(2, VectorClock.new() |> VectorClock.increment(2, 2))
-    s2 = new()
-         |> add(2, 2)
-         |> apply_remove(1, VectorClock.new() |> VectorClock.increment(1, 2))
-         |> apply_remove(1, VectorClock.new() |> VectorClock.increment(2, 2))
+    s1 =
+      new()
+      |> add(1, 1)
+      |> apply_remove(2, VectorClock.new() |> VectorClock.increment(2, 2))
+
+    s2 =
+      new()
+      |> add(2, 2)
+      |> apply_remove(1, VectorClock.new() |> VectorClock.increment(1, 2))
+      |> apply_remove(1, VectorClock.new() |> VectorClock.increment(2, 2))
 
     s3 = merge(s1, s2)
     assert get(s3) == MapSet.new()
