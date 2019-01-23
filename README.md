@@ -12,6 +12,9 @@ replicas can be updated independently and concurrently without coordination betw
 
 ## References
 
+ - [A Comprehensive Study of Convergent and Commutative Replicated Data Types](https://link.springer.com/chapter/10.1007%2F978-3-642-24550-3_29)
+ > Shapiro, Marc, Nuno Preguiça, Carlos Baquero, and Marek Zawirski. 2011. "Conflict-Free Replicated Data Types." In _Stabilization, Safety, and Security of Distributed Systems_, edited by Xavier Défago, Franck Petit, and Vincent Villain, 386–400. Berlin, Heidelberg: Springer Berlin Heidelberg.
+
 ## License
 
 `crdt_ex` is dual-licensed under the terms of either the MIT License or the Apache License (Version
