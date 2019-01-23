@@ -43,8 +43,8 @@ defmodule Crdt.VectorClockTest do
   end
 
   test "forget", %{c1: c1, c2: c2, c3: c3} do
-    assert forget(c1, c3) == %{1 => 1}
-    assert forget(c2, c3) == %{2 => 3, 3 => 3}
+    assert forget(c1, c3) == %{}
+    assert forget(c2, c3) == %{}
     assert forget(%{1 => 2, 3 => 1}, c3) == %{1 => 2}
   end
 
@@ -76,5 +76,10 @@ defmodule Crdt.VectorClockTest do
     assert apply_dot(c3, {2, 2}) == %{1 => 1, 2 => 3, 3 => 3}
     assert apply_dot(c3, {2, 3}) == %{1 => 1, 2 => 3, 3 => 3}
     assert apply_dot(c3, {2, 4}) == %{1 => 1, 2 => 4, 3 => 3}
+  end
+
+  test "intersection", %{c1: c1, c2: c2, c3: c3} do
+    assert intersection(c1, c3) == %{1 => 1}
+    assert intersection(c2, c3) == %{2 => 3, 3 => 3}
   end
 end

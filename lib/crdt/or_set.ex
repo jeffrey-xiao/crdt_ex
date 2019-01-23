@@ -13,24 +13,68 @@ defmodule Crdt.ORSet do
     clock = VectorClock.merge(s1.clock, s2.clock)
 
     {keep, entries2} =
-      Enum.reduce(s1.entries, {%{}, s2.entries}, fn {item, clock1}, {acc, entries2} ->
+      Enum.reduce(s1.entries, {%{}, s2.entries}, fn {item, clock1}, {keep, entries2} ->
         case s2.entries[item] do
           nil ->
+            # `s2` removed item after `s1` added item.
             if VectorClock.descends?(s2.clock, clock1) do
-              {acc, entries2}
+              {keep, entries2}
+              # `s2` has not yet witnessed insertion.
             else
-              {Map.put(acc, item, clock1), entries2}
+              {Map.put(keep, item, clock1), entries2}
             end
 
           clock2 ->
-            nil
+            common_clock = VectorClock.intersection(s1.clock, s2.clock)
+
+            clock1 =
+              clock1
+              |> VectorClock.forget(common_clock)
+              |> VectorClock.forget(s2.clock)
+
+            clock2 =
+              clock2
+              |> VectorClock.forget(common_clock)
+              |> VectorClock.forget(s1.clock)
+
+            common_clock =
+              common_clock
+              |> VectorClock.merge(clock1)
+              |> VectorClock.merge(clock2)
+
+            if common_clock == %{} do
+              {keep, Map.delete(entries2, item)}
+            else
+              {Map.put(keep, item, common_clock), Map.delete(entries2, item)}
+            end
         end
       end)
+
+    keep = Enum.reduce(entries2, keep, fn {item, clock2}, keep ->
+      clock2 = VectorClock.forget(clock2, s1.clock)
+
+      if clock2 == %{} do
+        keep
+      else
+        Map.put(keep, item, clock2)
+      end
+    end)
+
+    deferred =
+      Map.merge(s1.deferred, s2.deferred, fn _clock, items1, items2 ->
+        MapSet.union(items1, items2)
+      end)
+
+    %__MODULE__{clock: clock, entries: keep, deferred: deferred}
+    |> apply_deferred_remove()
   end
 
   def add(set, item, id) do
-    clock = VectorClock.increment(set.clock, id)
-    dot = {id, VectorClock.get(clock, id)}
+    apply_add(set, item, {id, VectorClock.get(set.clock, id) + 1})
+  end
+
+  def apply_add(set, item, dot) do
+    clock = VectorClock.apply_dot(set.clock, dot)
 
     # Apply birth dot to entries.
     entries =
@@ -47,27 +91,19 @@ defmodule Crdt.ORSet do
     apply_remove(set, item, set.clock)
   end
 
-  defp apply_deferred_remove(set) do
-    deferred = set.deferred
-
-    # Attempt to remove all deferred entries.
-    Enum.reduce(deferred, %__MODULE__{set | deferred: %{}}, fn {clock, items}, acc ->
-      Enum.reduce(items, acc, fn item, acc ->
-        apply_remove(acc, item, clock)
-      end)
-    end)
-  end
-
-  defp apply_remove(set, item, clock) do
+  def apply_remove(set, item, clock) do
     # Have not yet seen remove operation, so add to deferred items.
-    if !VectorClock.descends?(set.clock, clock) do
-      deferred =
-        Map.update(set.deferred, clock, MapSet.new([item]), fn deferred_items ->
-          MapSet.put(deferred_items, item)
-        end)
+    set =
+      if !VectorClock.descends?(set.clock, clock) do
+        deferred =
+          Map.update(set.deferred, clock, MapSet.new([item]), fn deferred_items ->
+            MapSet.put(deferred_items, item)
+          end)
 
-      %__MODULE__{set | deferred: deferred}
-    end
+        %__MODULE__{set | deferred: deferred}
+      else
+        set
+      end
 
     case Map.pop(set.entries, item) do
       {nil, _entries} ->
@@ -89,8 +125,19 @@ defmodule Crdt.ORSet do
     end
   end
 
+  defp apply_deferred_remove(set) do
+    deferred = set.deferred
+
+    # Attempt to remove all deferred entries.
+    Enum.reduce(deferred, %__MODULE__{set | deferred: %{}}, fn {clock, items}, acc ->
+      Enum.reduce(items, acc, fn item, acc ->
+        apply_remove(acc, item, clock)
+      end)
+    end)
+  end
+
   def get(set) do
-    set.entries |> Map.keys()
+    set.entries |> Map.keys() |> MapSet.new()
   end
 
   def member?(set, item) do

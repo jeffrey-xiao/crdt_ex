@@ -21,4 +21,8 @@ defmodule Crdt.GSetTest do
     set = new() |> add(1) |> add(1)
     assert member?(set, 1)
   end
+
+  test "get" do
+    assert new() |> add(1) |> add(2) |> get() == MapSet.new([1, 2])
+  end
 end

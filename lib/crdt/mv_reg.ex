@@ -47,8 +47,8 @@ defmodule Crdt.MVReg do
   @doc """
   Returns a list of values associated with `reg`.
   """
-  @spec get(t) :: [any()]
-  def get(reg), do: reg |> Enum.map(fn {value, _clock} -> value end) |> Enum.uniq()
+  @spec get(t) :: MapSet.t(any())
+  def get(reg), do: reg |> Stream.map(fn {value, _clock} -> value end) |> Enum.into(MapSet.new())
 
   @spec clock(t) :: VectorClock.t()
   defp clock(reg) do

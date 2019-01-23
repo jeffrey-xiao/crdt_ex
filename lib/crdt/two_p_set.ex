@@ -43,6 +43,12 @@ defmodule Crdt.TwoPSet do
   end
 
   @doc """
+  Returns all items in `set`.
+  """
+  @spec get(t) :: MapSet.t(any())
+  def get(set), do: MapSet.difference(GSet.get(set.a_set), GSet.get(set.r_set))
+
+  @doc """
   Returns `true` if `item` is a member of `set`.
   """
   @spec member?(t, any()) :: boolean()

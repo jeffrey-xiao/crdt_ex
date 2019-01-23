@@ -33,12 +33,8 @@ defmodule Crdt.LWWSet do
   end
 
   @spec map_merge(value_map, value_map) :: value_map
-  defp map_merge(m1, m2) do
-    (Map.keys(m1) ++ Map.keys(m2))
-    |> Stream.uniq()
-    |> Stream.map(fn item -> {item, map_max(m1[item], m2[item])} end)
-    |> Enum.into(%{})
-  end
+  defp map_merge(m1, m2),
+    do: Map.merge(m1, m2, fn _item, timestamp1, timestamp2 -> max(timestamp1, timestamp2) end)
 
   @spec map_max(any(), any()) :: any()
   defp map_max(item1, item2) do
@@ -72,18 +68,39 @@ defmodule Crdt.LWWSet do
   end
 
   @doc """
+  Returns all items in `set`.
+  """
+  @spec get(t) :: MapSet.t(any())
+  def get(set) do
+    set.a_map
+    |> Stream.filter(fn {item, a_timestamp} ->
+      case set.r_map[item] do
+        nil -> true
+        r_timestamp ->
+          cond do
+            a_timestamp > r_timestamp -> true
+            a_timestamp < r_timestamp -> false
+            true -> set.bias == :add
+          end
+      end
+    end)
+    |> Stream.map(fn {item, _a_timestamp} -> item end)
+    |> Enum.into(MapSet.new())
+  end
+
+  @doc """
   Returns `true` if `item` is a member of `set`.
   """
   @spec member?(t, any()) :: boolean()
   def member?(set, item) do
-    a_item = set.a_map[item]
-    r_item = set.r_map[item]
+    a_timestamp = set.a_map[item]
+    r_timestamp = set.r_map[item]
 
     cond do
-      a_item == nil -> false
-      r_item == nil -> true
-      a_item > r_item -> true
-      a_item < r_item -> false
+      a_timestamp == nil -> false
+      r_timestamp == nil -> true
+      a_timestamp > r_timestamp -> true
+      a_timestamp < r_timestamp -> false
       true -> set.bias == :add
     end
   end

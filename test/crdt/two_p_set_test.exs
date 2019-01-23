@@ -30,4 +30,8 @@ defmodule Crdt.TwoPSetTest do
     set = new() |> add(1) |> remove(1)
     refute member?(set, 1)
   end
+
+  test "get" do
+    assert new() |> add(1) |> remove(1) |> add(2) |> get() == MapSet.new([2])
+  end
 end

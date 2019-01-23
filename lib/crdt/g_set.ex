@@ -24,6 +24,12 @@ defmodule Crdt.GSet do
   def add(set, item), do: MapSet.put(set, item)
 
   @doc """
+  Returns all items in `set`.
+  """
+  @spec get(t) :: MapSet.t(any())
+  def get(set), do: set
+
+  @doc """
   Returns `true` is `item` is a member of `set`.
   """
   @spec member?(t, any()) :: boolean()

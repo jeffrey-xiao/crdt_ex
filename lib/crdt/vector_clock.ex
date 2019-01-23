@@ -43,12 +43,12 @@ defmodule Crdt.VectorClock do
   def concurrent?(v1, v2), do: !descends?(v1, v2) && !descends?(v2, v1)
 
   @doc """
-  Forget any actors in `v1` that have smaller counts than the count in `v2`.
+  Forget any actors in `v1` that have smaller or equal counts than the count in `v2`.
   """
   @spec forget(t, t) :: t
   def forget(v1, v2) do
     v1
-    |> Enum.filter(fn {id, timestamp} -> timestamp >= get(v2, id) end)
+    |> Stream.reject(fn {id, timestamp} -> timestamp <= get(v2, id) end)
     |> Enum.into(%{})
   end
 
@@ -56,12 +56,7 @@ defmodule Crdt.VectorClock do
   Merges `v1` and `v2`.
   """
   @spec merge(t, t) :: t
-  def merge(v1, v2) do
-    (Map.keys(v1) ++ Map.keys(v2))
-    |> Stream.uniq()
-    |> Stream.map(fn id -> {id, max(get(v1, id), get(v2, id))} end)
-    |> Enum.into(%{})
-  end
+  def merge(v1, v2), do: Map.merge(v1, v2, fn _id, count1, count2 -> max(count1, count2) end)
 
   @doc """
   Returns the greatest-lower-bound of `v1` and `v2`.
@@ -69,8 +64,8 @@ defmodule Crdt.VectorClock do
   @spec greatest_lower_bound(t, t) :: t
   def greatest_lower_bound(v1, v2) do
     v1
-    |> Enum.filter(fn {id, _timestamp} -> v2[id] != nil end)
-    |> Enum.map(fn {id, timestamp} -> {id, min(timestamp, v2[id])} end)
+    |> Stream.filter(fn {id, _timestamp} -> v2[id] != nil end)
+    |> Stream.map(fn {id, timestamp} -> {id, min(timestamp, v2[id])} end)
     |> Enum.into(%{})
   end
 
@@ -103,5 +98,15 @@ defmodule Crdt.VectorClock do
     else
       v
     end
+  end
+
+  @doc """
+  Returns a vector clock of all the common dots in `s1` and `s2`. 
+  """
+  @spec intersection(t, t) :: t
+  def intersection(v1, v2) do
+    v1
+    |> Stream.filter(fn {id, count} -> get(v2, id) == count end)
+    |> Enum.into(%{})
   end
 end
