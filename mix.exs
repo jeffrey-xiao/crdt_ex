@@ -1,17 +1,21 @@
 defmodule Crdt.MixProject do
   use Mix.Project
 
+  @github_url "https://github.com/jeffrey-xiao/crdt_ex"
+  @gitlab_url "https://gitlab.com/jeffrey-xiao/crdt_ex"
+
   def project do
     [
       app: :crdt,
+      name: "crdt",
       version: "0.1.0",
       description: "A library of Conflict-Free Replicated Data Types (CRDTs).",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
       package: package(),
-      name: "crdt",
-      source_url: "https://gitlab.com/jeffrey-xiao/crdt_ex",
+      source_url: @gitlab_url,
+      homepage_url: @gitlab_url,
       test_coverage: [tool: ExCoveralls],
       preferred_cli_env: [
         coveralls: :test,
@@ -39,10 +43,11 @@ defmodule Crdt.MixProject do
 
   defp package do
     [
-      licenses: ["MIT", "Apache 2.0"],
+      files: ["lib", "LICENSE-APACHE", "LICENSE-MIT", "mix.exs", "README.md"],
+      licenses: ["Apache 2.0", "MIT"],
       links: %{
-        "GitHub" => "https://github.com/jeffrey-xiao/crdt_ex",
-        "GitLab" => "https://gitlab.com/jeffrey-xiao/crdt_ex"
+        "GitHub" => @github_url,
+        "GitLab" => @gitlab_url
       }
     ]
   end
