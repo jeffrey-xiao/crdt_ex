@@ -16,13 +16,13 @@ defmodule Crdt.ORSet do
   @doc """
   Returns a new, empty OR-Set Without Tombstones.
   """
-  @spec new() :: t
-  def new(), do: %__MODULE__{clock: VectorClock.new(), entries: %{}, deferred: %{}}
+  @spec new :: t()
+  def new, do: %__MODULE__{clock: VectorClock.new(), entries: %{}, deferred: %{}}
 
   @doc """
   Merges `s1` and `s2`.
   """
-  @spec merge(t, t) :: t
+  @spec merge(t(), t()) :: t()
   def merge(s1, s2) do
     clock = VectorClock.merge(s1.clock, s2.clock)
 
@@ -87,7 +87,7 @@ defmodule Crdt.ORSet do
   @doc """
   Adds `item` to `set` using actor `id`..
   """
-  @spec add(t, any(), any()) :: t
+  @spec add(t(), any(), any()) :: t()
   def add(set, item, id) do
     apply_add(set, item, {id, VectorClock.get(set.clock, id) + 1})
   end
@@ -95,7 +95,7 @@ defmodule Crdt.ORSet do
   @doc """
   Applies an add operation to `set` using `item` and with `dot` as the birth dot.
   """
-  @spec apply_add(t, any(), {any(), non_neg_integer()}) :: t
+  @spec apply_add(t(), any(), {any(), non_neg_integer()}) :: t()
   def apply_add(set, item, dot) do
     clock = VectorClock.apply_dot(set.clock, dot)
 
@@ -113,7 +113,7 @@ defmodule Crdt.ORSet do
   @doc """
   Removes `item` from `set`.
   """
-  @spec remove(t, any()) :: t
+  @spec remove(t(), any()) :: t()
   def remove(set, item) do
     apply_remove(set, item, set.clock)
   end
@@ -122,19 +122,19 @@ defmodule Crdt.ORSet do
   Applies a remove operation to `set` using `item` and with `clock` as the underlying causal
   context.
   """
-  @spec apply_remove(t, any(), VectorClock.t()) :: t
+  @spec apply_remove(t(), any(), VectorClock.t()) :: t()
   def apply_remove(set, item, clock) do
     # Have not yet seen remove operation, so add to deferred items.
     set =
-      if !VectorClock.descends?(set.clock, clock) do
+      if VectorClock.descends?(set.clock, clock) do
+        set
+      else
         deferred =
           Map.update(set.deferred, clock, MapSet.new([item]), fn deferred_items ->
             MapSet.put(deferred_items, item)
           end)
 
         %__MODULE__{set | deferred: deferred}
-      else
-        set
       end
 
     case Map.pop(set.entries, item) do
@@ -171,7 +171,7 @@ defmodule Crdt.ORSet do
   @doc """
   Returns all items in `set`.
   """
-  @spec get(t) :: MapSet.t(any())
+  @spec get(t()) :: MapSet.t(any())
   def get(set) do
     set.entries |> Map.keys() |> MapSet.new()
   end
@@ -179,7 +179,7 @@ defmodule Crdt.ORSet do
   @doc """
   Returns `true` if `item` is a member of `set`.
   """
-  @spec member?(t, any()) :: boolean()
+  @spec member?(t(), any()) :: boolean()
   def member?(set, item) do
     Map.has_key?(set.entries, item)
   end

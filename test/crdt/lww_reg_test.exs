@@ -15,8 +15,8 @@ defmodule Crdt.LWWRegTest do
   end
 
   test "merge" do
-    assert merge(new(1, 2), new(2, 1)) |> get() == 1
-    assert merge(new(1, 1), new(2, 2)) |> get() == 2
+    assert new(1, 2) |> merge(new(2, 1)) |> get() == 1
+    assert new(1, 1) |> merge(new(2, 2)) |> get() == 2
     assert_raise RuntimeError, fn -> merge(new(1, 1), new(2, 1)) end
   end
 end

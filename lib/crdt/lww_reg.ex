@@ -9,13 +9,13 @@ defmodule Crdt.LWWReg do
   @doc """
   Returns a new LWW-Reg initialized to `value` at `timestamp`.
   """
-  @spec new(any(), any()) :: t
+  @spec new(any(), any()) :: t()
   def new(value, timestamp), do: %__MODULE__{value: value, timestamp: timestamp}
 
   @doc """
   Merges `r1` and `r2`.
   """
-  @spec merge(t, t) :: t
+  @spec merge(t(), t()) :: t()
   def merge(r1, r2) do
     update(r1, r2.value, r2.timestamp)
   end
@@ -23,7 +23,7 @@ defmodule Crdt.LWWReg do
   @doc """
   Updates `reg` with `value` at `timestamp`.
   """
-  @spec update(t, any(), any()) :: t
+  @spec update(t(), any(), any()) :: t()
   def update(reg, value, timestamp) do
     cond do
       reg.timestamp == timestamp && reg.value != value ->
@@ -40,6 +40,6 @@ defmodule Crdt.LWWReg do
   @doc """
   Returns the value associated with `reg`.
   """
-  @spec get(t) :: any()
+  @spec get(t()) :: any()
   def get(reg), do: reg.value
 end

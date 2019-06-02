@@ -16,7 +16,7 @@ defmodule Crdt.MixProject do
       name: "crdt",
       source_url: @gitlab_url,
       homepage_url: @gitlab_url,
-      docs: [
+            docs: [
         extras: ["README.md"]
       ],
       test_coverage: [tool: ExCoveralls],
@@ -33,21 +33,22 @@ defmodule Crdt.MixProject do
     ]
   end
 
-  def application() do
+  def application do
     [
       extra_applications: [:logger]
     ]
   end
 
-  defp deps() do
+  defp deps do
     [
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0.0-rc.6", only: :dev, runtime: false},
       {:ex_doc, "~> 0.19", only: :dev, runtime: false},
       {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 
-  defp package() do
+  defp package do
     [
       files: ["lib", "LICENSE-APACHE", "LICENSE-MIT", "mix.exs", "README.md"],
       licenses: ["Apache 2.0", "MIT"],

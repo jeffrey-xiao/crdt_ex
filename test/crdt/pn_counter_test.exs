@@ -11,7 +11,7 @@ defmodule Crdt.PNCounterTest do
   test "merge" do
     c1 = new() |> increment(1, 1) |> decrement(2, 2)
     c2 = new() |> decrement(2, 3) |> increment(3, 3)
-    assert merge(c1, c2) |> get() == 1
+    assert c1 |> merge(c2) |> get() == 1
   end
 
   test "increment" do
