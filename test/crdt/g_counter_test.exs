@@ -11,7 +11,7 @@ defmodule Crdt.GCounterTest do
   test "merge" do
     c1 = new() |> increment(1, 1) |> increment(2, 2)
     c2 = new() |> increment(2, 3) |> increment(3, 3)
-    assert c1 |> merge(c1) |> get() == 7
+    assert c1 |> merge(c2) |> get() == 7
   end
 
   test "increment" do
