@@ -16,7 +16,7 @@ defmodule Crdt.MixProject do
       name: "crdt",
       source_url: @gitlab_url,
       homepage_url: @gitlab_url,
-            docs: [
+      docs: [
         extras: ["README.md"]
       ],
       test_coverage: [tool: ExCoveralls],
