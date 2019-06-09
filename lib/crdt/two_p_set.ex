@@ -31,7 +31,7 @@ defmodule Crdt.TwoPSet do
   def add(set, item), do: %__MODULE__{set | a_set: GSet.add(set.a_set, item)}
 
   @doc """
-  Removes `item` from `set.
+  Removes `item` from `set`.
   """
   @spec remove(t(), any()) :: t()
   def remove(set, item) do
