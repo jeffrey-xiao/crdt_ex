@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.19.2">
+    <title>Crdt.ORSet — crdt v0.1.0</title>
+    <link rel="stylesheet" href="dist/html-c1666276880c0f8e3769.css" />
+    <script src="dist/sidebar_items-2584c2996a.js"></script>
+    
+  </head>
+  <body data-type="modules">
+    <script>try { if(localStorage.getItem('night-mode')) document.body.className += ' night-mode'; } catch (e) { }</script>
+    <div class="main">
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" aria-hidden="true"></span>
+  <span class="sr-only">Toggle Sidebar</span>
+</button>
+<button class="sidebar-button night-mode-toggle">
+  <span class="icon-theme" aria-hidden="true"></span>
+  <span class="sr-only">Toggle Theme</span>
+</button>
+<section class="sidebar">
+
+  <a href="https://gitlab.com/jeffrey-xiao/crdt_ex" class="sidebar-projectLink">
+    <div class="sidebar-projectDetails">
+      <h1 class="sidebar-projectName">
+crdt      </h1>
+      <h2 class="sidebar-projectVersion">
+        v0.1.0
+      </h2>
+    </div>
+  </a>
+
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button">
+      <span class="icon-search" aria-hidden="true"></span>
+    </button>
+    <input name="q" type="text" id="search-list" class="search-input" placeholder="Search" aria-label="Search" autocomplete="off" />
+  </form>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+
+      <h1>
+        <small class="visible-xs">crdt v0.1.0</small>
+Crdt.ORSet        
+          <a href="https://gitlab.com/jeffrey-xiao/crdt_ex/blob/master/lib/crdt/or_set.ex#L1" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+      </h1>
+
+
+        <section id="moduledoc">
+<p>An OR-Set Without Tombstones (ORSWOT) allows for insertions and removals of elements. Should an
+insertion and removal be concurrent, the insertion wins.</p>
+        </section>
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
+  </div>
+</div>
+  </div>
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#add/3">add(set, item, id)</a>
+  </div>
+    <div class="summary-synopsis"><p>Adds <code class="inline">item</code> to <code class="inline">set</code> using actor <code class="inline">id</code></p>
+</div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#apply_add/3">apply_add(set, item, dot)</a>
+  </div>
+    <div class="summary-synopsis"><p>Applies an add operation to <code class="inline">set</code> using <code class="inline">item</code> and with <code class="inline">dot</code> as the birth dot</p>
+</div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#apply_remove/3">apply_remove(set, item, clock)</a>
+  </div>
+    <div class="summary-synopsis"><p>Applies a remove operation to <code class="inline">set</code> using <code class="inline">item</code> and with <code class="inline">clock</code> as the underlying causal
+context</p>
+</div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get/1">get(set)</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns all items in <code class="inline">set</code></p>
+</div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#member?/2">member?(set, item)</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns <code class="inline">true</code> if <code class="inline">item</code> is a member of <code class="inline">set</code></p>
+</div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#merge/2">merge(s1, s2)</a>
+  </div>
+    <div class="summary-synopsis"><p>Merges <code class="inline">s1</code> and <code class="inline">s2</code></p>
+</div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#new/0">new()</a>
+  </div>
+    <div class="summary-synopsis"><p>Returns a new, empty OR-Set Without Tombstones</p>
+</div>
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#remove/2">remove(set, item)</a>
+  </div>
+    <div class="summary-synopsis"><p>Removes <code class="inline">item</code> from <code class="inline">set</code></p>
+</div>
+</div>
+  </div>
+        </section>
+
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Types          </h1>
+          <div class="types-list">
+<section class="detail" id="t:t/0">
+    <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">t()</span>
+      <a href="https://gitlab.com/jeffrey-xiao/crdt_ex/blob/master/lib/crdt/or_set.ex#L10" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>t() :: %Crdt.ORSet{
+  clock: <a href="Crdt.VectorClock.html#t:t/0">Crdt.VectorClock.t</a>(),
+  deferred: %{optional(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) => <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()},
+  entries: %{optional(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) => <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}
+}</pre>
+      </div>
+  </div>
+  <section class="docstring">
+  </section>
+</section>
+          </div>
+        </section>
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions          </h1>
+          <div class="functions-list">
+<section class="detail" id="add/3">
+    <div class="detail-header">
+    <a href="#add/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">add(set, item, id)</span>
+      <a href="https://gitlab.com/jeffrey-xiao/crdt_ex/blob/master/lib/crdt/or_set.ex#L91" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>add(<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="#t:t/0">t</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Adds <code class="inline">item</code> to <code class="inline">set</code> using actor <code class="inline">id</code>..</p>
+  </section>
+</section>
+<section class="detail" id="apply_add/3">
+    <div class="detail-header">
+    <a href="#apply_add/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">apply_add(set, item, dot)</span>
+      <a href="https://gitlab.com/jeffrey-xiao/crdt_ex/blob/master/lib/crdt/or_set.ex#L99" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>apply_add(<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), {<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">non_neg_integer</a>()}) :: <a href="#t:t/0">t</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Applies an add operation to <code class="inline">set</code> using <code class="inline">item</code> and with <code class="inline">dot</code> as the birth dot.</p>
+  </section>
+</section>
+<section class="detail" id="apply_remove/3">
+    <div class="detail-header">
+    <a href="#apply_remove/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">apply_remove(set, item, clock)</span>
+      <a href="https://gitlab.com/jeffrey-xiao/crdt_ex/blob/master/lib/crdt/or_set.ex#L126" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>apply_remove(<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), <a href="Crdt.VectorClock.html#t:t/0">Crdt.VectorClock.t</a>()) :: <a href="#t:t/0">t</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Applies a remove operation to <code class="inline">set</code> using <code class="inline">item</code> and with <code class="inline">clock</code> as the underlying causal
+context.</p>
+  </section>
+</section>
+<section class="detail" id="get/1">
+    <div class="detail-header">
+    <a href="#get/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">get(set)</span>
+      <a href="https://gitlab.com/jeffrey-xiao/crdt_ex/blob/master/lib/crdt/or_set.ex#L175" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>get(<a href="#t:t/0">t</a>()) :: <a href="https://hexdocs.pm/elixir/MapSet.html#t:t/1">MapSet.t</a>(<a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>())</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Returns all items in <code class="inline">set</code>.</p>
+  </section>
+</section>
+<section class="detail" id="member?/2">
+    <div class="detail-header">
+    <a href="#member?/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">member?(set, item)</span>
+      <a href="https://gitlab.com/jeffrey-xiao/crdt_ex/blob/master/lib/crdt/or_set.ex#L183" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>member?(<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">boolean</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Returns <code class="inline">true</code> if <code class="inline">item</code> is a member of <code class="inline">set</code>.</p>
+  </section>
+</section>
+<section class="detail" id="merge/2">
+    <div class="detail-header">
+    <a href="#merge/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">merge(s1, s2)</span>
+      <a href="https://gitlab.com/jeffrey-xiao/crdt_ex/blob/master/lib/crdt/or_set.ex#L26" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>merge(<a href="#t:t/0">t</a>(), <a href="#t:t/0">t</a>()) :: <a href="#t:t/0">t</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Merges <code class="inline">s1</code> and <code class="inline">s2</code>.</p>
+  </section>
+</section>
+<section class="detail" id="new/0">
+    <div class="detail-header">
+    <a href="#new/0" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">new()</span>
+      <a href="https://gitlab.com/jeffrey-xiao/crdt_ex/blob/master/lib/crdt/or_set.ex#L20" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>new() :: <a href="#t:t/0">t</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Returns a new, empty OR-Set Without Tombstones.</p>
+  </section>
+</section>
+<section class="detail" id="remove/2">
+    <div class="detail-header">
+    <a href="#remove/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">remove(set, item)</span>
+      <a href="https://gitlab.com/jeffrey-xiao/crdt_ex/blob/master/lib/crdt/or_set.ex#L117" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+        
+      <div class="specs">
+          <pre>remove(<a href="#t:t/0">t</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()) :: <a href="#t:t/0">t</a>()</pre>
+      </div>
+  </div>
+  <section class="docstring">
+<p>Removes <code class="inline">item</code> from <code class="inline">set</code>.</p>
+  </section>
+</section>
+          </div>
+        </section>
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.19.2),
+          </span>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+  <script src="dist/html-c1666276880c0f8e3769.js"></script>
+  
+  </body>
+</html>
+
